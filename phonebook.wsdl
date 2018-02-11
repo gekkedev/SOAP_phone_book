@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="Phonebook"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="Phonebook"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="Phonebook"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <xsd:documentation></xsd:documentation>
+
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="Phonebook">
+            <xsd:complexType name="contact">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"></xsd:element>
+                    <xsd:element name="phone" type="tns:integer"></xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="contact">
+        <wsdl:part name="name" type="xsd:contact"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="status">
+        <wsdl:part name="status" type="tns:integer"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="result">
+        <wsdl:part name='result' type='xsd:string'></wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="Phonebook">
+        <wsdl:operation name="addContact">
+            <wsdl:input message="tns:contact"/>
+            <wsdl:output message="tns:status"/>
+        </wsdl:operation>
+        <wsdl:operation name="listContacts">
+            <wsdl:output message="tns:result"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="Phonebook" type="tns:Phonebook">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="addContact">
+            <wsdl:input>
+                <soap:body use="literal" namespace="Phonebook"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="Phonebook"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listContacts">
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="Phonebook">
+        <wsdl:port binding="tns:Phonebook" name="Phonebook">
+            <soap:address location="http://localhost/server.php"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
