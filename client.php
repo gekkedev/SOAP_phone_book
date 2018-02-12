@@ -60,10 +60,10 @@ $contacts = $soapclient->listContacts();
 foreach (json_decode($contacts, true) as $contact) {
     $contact = new Contact($contact);
     echo '<tr>';
-    echo "<td>$contact->name<td>";
-    echo "<td>$contact->email<td>";
-    echo "<td>$contact->phone<td>";
-    echo "<td>$contact->address<td>";
+    echo "<td>$contact->name</td>";
+    echo "<td>$contact->email</td>";
+    echo "<td>$contact->phone</td>";
+    echo "<td>$contact->address</td>";
     echo '</tr>';
 }
 ?>
