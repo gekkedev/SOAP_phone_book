@@ -6,12 +6,12 @@ class Contact
     public $email;
     public $phone;
     public $address;
-    public $outputmode;
+    private $outputmode;
 
     function __construct($values = null, $outputmode = false) {
         $this->outputmode = $outputmode;
         if (is_array($values)) {
-            if (isset($values['id'])) $this->id = $values['id'];
+            $this->id = (isset($values['id'])) ? $values['id'] : 0;
             $this->name = $this->displayString($values['name']);
             $this->email = $this->displayString($values['email']);
             $this->phone = $this->displayString($values['phone']);

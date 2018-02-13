@@ -13,6 +13,7 @@
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="Phonebook">
             <xsd:complexType name="contact">
                 <xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"></xsd:element>
                     <xsd:element name="name" type="xsd:string"></xsd:element>
                     <xsd:element name="email" type="xsd:string"></xsd:element>
                     <xsd:element name="phone" type="tns:integer"></xsd:element>
@@ -40,7 +41,12 @@
             <wsdl:input message="tns:contact"/>
             <wsdl:output message="tns:status"/>
         </wsdl:operation>
+        <wsdl:operation name="editContact">
+            <wsdl:input message="tns:contact"/>
+            <wsdl:output message="tns:status"/>
+        </wsdl:operation>
         <wsdl:operation name="listContacts">
+            <wsdl:input message="tns:input"/>
             <wsdl:output message="tns:result"/>
         </wsdl:operation>
         <wsdl:operation name="searchContacts">
@@ -55,17 +61,11 @@
 
     <wsdl:binding name="Phonebook" type="tns:Phonebook">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="addContact">
-            <wsdl:input>
-                <soap:body use="literal" namespace="Phonebook"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" namespace="Phonebook"/>
-            </wsdl:output>
-        </wsdl:operation>
+        <wsdl:operation name="addContact" />
         <wsdl:operation name="listContacts" />
         <wsdl:operation name="searchContacts" />
         <wsdl:operation name="deleteContact" />
+        <wsdl:operation name="editContact" />
     </wsdl:binding>
 
     <wsdl:service name="Phonebook">

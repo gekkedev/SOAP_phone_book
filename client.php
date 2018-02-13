@@ -3,7 +3,13 @@
 require_once('models.php');
 
 //initialize SOAP client
-$soapclient = new SoapClient('http://localhost/server.php?wsdl',['trace'=>1,'cache_wsdl'=>WSDL_CACHE_NONE]);
+$soapclient = new SoapClient('http://localhost/server.php?wsdl',[
+    'trace' => 1,
+    'cache_wsdl' => WSDL_CACHE_NONE,
+    'classmap' => [
+        'contact' => 'Contact',
+    ]
+]);
 
 function showContactResult($result) {
     $result = json_decode($result, true);
@@ -22,7 +28,7 @@ function showContactResult($result) {
         $return .= "<td>$contact->email</td>";
         $return .= "<td>$contact->phone</td>";
         $return .= "<td>$contact->address</td>";
-        $return .= "<td><a href='?mode=delete&id=$contact->id'>Delete</a></td>";
+        $return .= "<td><a href='?mode=delete&id=$contact->id'>Delete</a> | <a href='?mode=edit&id=$contact->id'>Edit</a></td>";
         $return .= '</tr>';
     }
     return $return . '</tbody></table>';
@@ -37,13 +43,13 @@ switch (@$_GET['mode']) {
         if (!empty($_POST)) {
             $contact = new Contact($_POST);
             $result = $soapclient->addContact($contact);
-            if ((bool)$result != true) var_dump($result);
+            if ($result != true) var_dump($result);
         }
         break;
     case 'delete':
         $id = $_GET['id'];
         $result = $soapclient->deleteContact($id);
-        if ((bool)$result != true) {
+        if ($result != true) {
             var_dump($result);
         } else {
             echo 'Contact deleted. Please <a href="'.$_SERVER['SCRIPT_NAME'].'">refresh</a>';
@@ -56,7 +62,45 @@ switch (@$_GET['mode']) {
             echo "<h2>Search results for '$name':</h2>" . showContactResult($result);
         }
         break;
-    default:
+    case 'edit':
+        if (empty($_POST)) {
+            $id = $_GET['id'];
+            $result = json_decode($soapclient->listContacts($id), true);
+            $contact = new Contact($result);
+            echo '
+                <h2>Edit contact no.'.$id.'</h2>
+                <form method="POST" action="' . $_SERVER['SCRIPT_NAME'] . '?mode=edit">
+                    <input name="id" type="hidden" value="'.$contact->id.'">
+                    <p>
+                        Name:
+                        <input name="name" value="'.$contact->name.'">
+                    </p>
+                    <p>
+                        Email:
+                        <input name="email" value="'.$contact->email.'" type="email">
+                    </p>
+                    <p>
+                        Phone:
+                        <input name="phone" value="'.$contact->phone.'" type="number">
+                    </p>
+                    <p>
+                        Address:
+                        <input name="address" value="'.$contact->address.'">
+                    </p>
+                    <p>
+                        <input type="submit">
+                    </p>
+                </form>';
+        } else {
+            $contact = new Contact($_POST);
+            $status = $soapclient->editContact($contact);
+            if ($status != true) {
+                var_dump($status);
+            } else {
+                echo 'Contact updated.';
+            }
+        }
+        break;
 }
 ?>
 

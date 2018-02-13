@@ -19,14 +19,33 @@ function addContact($contact) {
     return true;
 }
 
-function listContacts() {
+function listContacts($id = 0) {
     global $database;
-    $data = $database->select('users', '*');
-    $contacts = array();
-    foreach ($data as $contact_arr) {
-        $contacts[] = new Contact($contact_arr);
+    if ($id != 0 ) {
+        return json_encode($database->select('users', '*', [
+            'id' => $id
+        ])[0]);
+    } else {
+        $data = $database->select('users', '*');
+        $contacts = array();
+        foreach ($data as $contact_arr) {
+            $contacts[] = new Contact($contact_arr);
+        }
+        return json_encode($contacts);
     }
-    return json_encode($contacts);
+}
+
+function editContact($contact) {
+    global $database;
+    $database->update('users', [
+        'name' => $contact->name,
+        'email' => $contact->email,
+        'phone' => $contact->phone,
+        'address' => $contact->address,
+    ], [
+        'id' => $contact->id
+    ]);
+    return true;
 }
 
 function searchContacts($input) {
@@ -58,8 +77,8 @@ $database = new Medoo\Medoo([
 ]);
 
 $server = new SoapServer("phonebook.wsdl",[
-    'classmap'=>[
-        'contact'=>'Contact',
+    'classmap' => [
+        'contact' => 'Contact',
     ]
 ]);
 
@@ -68,6 +87,7 @@ try {
     $server->addFunction('deleteContact');
     $server->addFunction('listContacts');
     $server->addFunction('searchContacts');
+    $server->addFunction('editContact');
     $server->handle();
 } catch (SoapFault $exc) {
     return $exc->getTraceAsString();
