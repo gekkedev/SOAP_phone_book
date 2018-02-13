@@ -21,12 +21,18 @@ function addContact($contact) {
 
 function listContacts() {
     global $database;
-    $data = $database->select('users', [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'address'
+    $data = $database->select('users', '*');
+    $contacts = array();
+    foreach ($data as $contact_arr) {
+        $contacts[] = new Contact($contact_arr);
+    }
+    return json_encode($contacts);
+}
+
+function searchContacts($input) {
+    global $database;
+    $data = $database->select('users', '*', [
+        'name[~]' => $input
     ]);
     $contacts = array();
     foreach ($data as $contact_arr) {
@@ -52,6 +58,7 @@ $server = new SoapServer("phonebook.wsdl",[
 try {
     $server->addFunction('addContact');
     $server->addFunction('listContacts');
+    $server->addFunction('searchContacts');
     $server->handle();
 } catch (SoapFault $exc) {
     return $exc->getTraceAsString();

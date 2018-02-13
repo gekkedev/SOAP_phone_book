@@ -6,14 +6,21 @@ class Contact
     public $email;
     public $phone;
     public $address;
+    public $outputmode;
 
-    function __construct($values = null) {
+    function __construct($values = null, $outputmode = false) {
+        $this->outputmode = $outputmode;
         if (is_array($values)) {
             if (isset($values['id'])) $this->id = $values['id'];
-            $this->name = $values['name'];
-            $this->email = $values['email'];
-            $this->phone = $values['phone'];
-            $this->address = $values['address'];
+            $this->name = $this->displayString($values['name']);
+            $this->email = $this->displayString($values['email']);
+            $this->phone = $this->displayString($values['phone']);
+            $this->address = $this->displayString($values['address']);
         }
+    }
+    private function displayString($input) {
+        if ($this->outputmode && strlen($input) == 0) {
+            return '[not set]';
+        } else return $input;
     }
 }

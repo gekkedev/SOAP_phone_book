@@ -14,20 +14,25 @@
             <xsd:complexType name="contact">
                 <xsd:sequence>
                     <xsd:element name="name" type="xsd:string"></xsd:element>
+                    <xsd:element name="email" type="xsd:string"></xsd:element>
                     <xsd:element name="phone" type="tns:integer"></xsd:element>
+                    <xsd:element name="address" type="xsd:string"></xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
     </wsdl:types>
 
     <wsdl:message name="contact">
-        <wsdl:part name="name" type="xsd:contact"></wsdl:part>
+        <wsdl:part name="contact" type="xsd:contact"></wsdl:part>
     </wsdl:message>
     <wsdl:message name="status">
         <wsdl:part name="status" type="tns:integer"></wsdl:part>
     </wsdl:message>
+    <wsdl:message name="input">
+        <wsdl:part name="input" type="xsd:string"></wsdl:part>
+    </wsdl:message>
     <wsdl:message name="result">
-        <wsdl:part name='result' type='xsd:string'></wsdl:part>
+        <wsdl:part name="result" type="xsd:string"></wsdl:part>
     </wsdl:message>
 
     <wsdl:portType name="Phonebook">
@@ -36,6 +41,10 @@
             <wsdl:output message="tns:status"/>
         </wsdl:operation>
         <wsdl:operation name="listContacts">
+            <wsdl:output message="tns:result"/>
+        </wsdl:operation>
+        <wsdl:operation name="searchContacts">
+            <wsdl:input message="tns:input"/>
             <wsdl:output message="tns:result"/>
         </wsdl:operation>
     </wsdl:portType>
@@ -50,8 +59,8 @@
                 <soap:body use="literal" namespace="Phonebook"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="listContacts">
-        </wsdl:operation>
+        <wsdl:operation name="listContacts" />
+        <wsdl:operation name="searchContacts" />
     </wsdl:binding>
 
     <wsdl:service name="Phonebook">
