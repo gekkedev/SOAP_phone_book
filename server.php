@@ -41,6 +41,14 @@ function searchContacts($input) {
     return json_encode($contacts);
 }
 
+function deleteContact($id) {
+    global $database;
+    $database->delete('users', [
+        'id' => $id
+    ]);
+    return true;
+}
+
 $database = new Medoo\Medoo([
     'database_type' => 'mysql',
     'database_name' => 'phonebook',
@@ -57,6 +65,7 @@ $server = new SoapServer("phonebook.wsdl",[
 
 try {
     $server->addFunction('addContact');
+    $server->addFunction('deleteContact');
     $server->addFunction('listContacts');
     $server->addFunction('searchContacts');
     $server->handle();

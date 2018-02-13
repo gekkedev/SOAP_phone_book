@@ -47,6 +47,10 @@
             <wsdl:input message="tns:input"/>
             <wsdl:output message="tns:result"/>
         </wsdl:operation>
+        <wsdl:operation name="deleteContact">
+            <wsdl:input message="tns:input"/>
+            <wsdl:output message="tns:status"/>
+        </wsdl:operation>
     </wsdl:portType>
 
     <wsdl:binding name="Phonebook" type="tns:Phonebook">
@@ -61,6 +65,7 @@
         </wsdl:operation>
         <wsdl:operation name="listContacts" />
         <wsdl:operation name="searchContacts" />
+        <wsdl:operation name="deleteContact" />
     </wsdl:binding>
 
     <wsdl:service name="Phonebook">

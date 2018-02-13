@@ -14,7 +14,7 @@ function showContactResult($result) {
     } else {
         return print_r($result, true);
     }
-    $return .= '<table><thead><th>Name</th><th>Email</th><th>Phone</th><th>Address</th></thead><tbody>';
+    $return .= '<table><thead><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Options</th></thead><tbody>';
     foreach ($result as $contact) {
         $contact = new Contact($contact, true);
         $return .= '<tr>';
@@ -22,6 +22,7 @@ function showContactResult($result) {
         $return .= "<td>$contact->email</td>";
         $return .= "<td>$contact->phone</td>";
         $return .= "<td>$contact->address</td>";
+        $return .= "<td><a href='?mode=delete&id=$contact->id'>Delete</a></td>";
         $return .= '</tr>';
     }
     return $return . '</tbody></table>';
@@ -37,6 +38,15 @@ switch (@$_GET['mode']) {
             $contact = new Contact($_POST);
             $result = $soapclient->addContact($contact);
             if ((bool)$result != true) var_dump($result);
+        }
+        break;
+    case 'delete':
+        $id = $_GET['id'];
+        $result = $soapclient->deleteContact($id);
+        if ((bool)$result != true) {
+            var_dump($result);
+        } else {
+            echo 'Contact deleted. Please <a href="'.$_SERVER['SCRIPT_NAME'].'">refresh</a>';
         }
         break;
     case 'search':
